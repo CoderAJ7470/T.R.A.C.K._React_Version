@@ -1,0 +1,14 @@
+.flightTable {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  text-align: center;
+}
+
+.flightTable ul {
+  padding-left: 0;
+}
+
+.flightTable li {
+  list-style-type: none;
+  border: 1px solid #fff;
+}

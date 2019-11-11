@@ -1,0 +1,10 @@
+@import url('https://fonts.googleapis.com/css?family=Open+Sans&display=swap');
+
+.tabs {
+  padding: 2em;
+  margin-top: 1em;
+  background-color: #222831;
+  color: #fff;
+  border: 1px solid #555;
+  min-height: 650px;
+}

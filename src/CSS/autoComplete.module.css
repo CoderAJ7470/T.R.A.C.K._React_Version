@@ -1,0 +1,20 @@
+.autoInput {
+  border: 0;
+  padding-left: 3px;
+  height: 24px;
+}
+
+.items {
+  position: absolute;
+  margin-top: 0px;
+  padding: 0.4em 0.6em;
+  background-color: #fff;
+  color: #222831;
+  text-align: left;
+  font-weight: 600;
+}
+
+.items li {
+  cursor: pointer;
+  list-style-type: none;
+}
