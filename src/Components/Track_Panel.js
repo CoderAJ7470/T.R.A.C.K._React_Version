@@ -1,13 +1,14 @@
 import React, { useState } from 'react';
-import { DragDropContext } from 'react-beautiful-dnd';
+import { DragDropContext, Droppable } from 'react-beautiful-dnd';
 
 import trackPanelStyles from '../CSS/track_panel.module.css';
-import FlightList from './FlightList';
+import FlightStrip from './FlightStrip';
 
 export default function Header() {
   const [isDeparture, setStatus] = useState(true);
   const [statusButtonText, setButtonText] = useState('Departure');
 
+  const [id, setID] = useState(0);
   const [codeInput, setCode] = useState('');
   const [fltNoInput, setFltNo] = useState('');
   const [acftTypeInput, setAcftType] = useState('');
@@ -17,11 +18,8 @@ export default function Header() {
 
   // let codesArray = ['ABJ', 'ABL', 'GBL', 'HVN', 'RGL', 'STE', 'STR', 'THI'];
 
-  const id = '';
   const columnDepID = '1';
   const columnArrID = '2';
-
-  const uuidv4 = require('uuid/v4');
 
   function toggleStatus() {
     isDeparture ? setStatus(false) : setStatus(true);
@@ -62,9 +60,9 @@ export default function Header() {
 
   // create a departures object and push it to the departures array
   function addDepartureStrip() {
-    updateDepArray([... departuresArray,
+    updateDepArray([...departuresArray,
       {
-        id: uuidv4(),
+        id: setID(id + 1),
         code: codeInput,
         fltNum: fltNoInput,
         type: acftTypeInput,
@@ -128,8 +126,24 @@ export default function Header() {
         </fieldset>
       </div>
       <DragDropContext onDragEnd={onDragEnd}>
-        <FlightList key={columnDepID} depArray={departuresArray} />
-        <FlightList key={columnArrID} arrArray={arrivalsArray} />
+        <Droppable droppableId={columnDepID}>
+          {(provided) => (
+            <div
+              ref={provided.innerRef}
+              {...provided.droppableProps}
+              >
+                {departuresArray.map((fltData, index) =>
+                  <FlightStrip
+                    index={index}
+                    key={fltData.id}
+                    code={fltData.code}
+                    number={fltData.fltNum}
+                    type={fltData.type}
+                    altitude={fltData.cruiseAlt} />)}
+                {provided.placeholder}
+            </div>
+          )}
+        </Droppable>
       </DragDropContext>
     </>
   )

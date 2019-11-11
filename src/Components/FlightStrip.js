@@ -12,7 +12,23 @@ export default class FlightStrip extends Component {
 
   render() {
     return (
-      <div>jkdbvfkj</div>
+      <Draggable draggableId={this.props.key} index={this.props.index}>
+        {(provided) => (
+          <div
+            {...provided.draggableProps}
+            {...provided.dragHandleProps}
+            ref={provided.innerRef}
+          >
+            <div>
+              {console.log('key is ', this.props.key)}
+              {this.props.code} {this.props.number}
+            </div>
+            <div>
+              {this.props.type} {this.props.altitude}
+            </div>
+          </div>
+        )}
+      </Draggable>
     )
   }
 }
