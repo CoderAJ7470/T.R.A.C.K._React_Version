@@ -10,7 +10,7 @@ export default class FlightStrip extends Component {
 
   render() {
     return (
-      <Draggable draggableId={this.props.fltKey} index={this.props.index}>
+      <Draggable draggableId={this.props.flightId} index={this.props.index}>
         {(provided) => (
           <div className={this.props.status === 'Departure' ? flightStripStyles['depFltStrip'] : flightStripStyles['arrFltStrip']}
             {...provided.draggableProps}
@@ -18,7 +18,7 @@ export default class FlightStrip extends Component {
             ref={provided.innerRef}
           >
             <div>
-              {this.props.code} {this.props.number}
+              {this.props.code} {this.props.number} {console.log(this.props.flightId)}
             </div>
             <div>
               {this.props.type} {this.props.altitude}

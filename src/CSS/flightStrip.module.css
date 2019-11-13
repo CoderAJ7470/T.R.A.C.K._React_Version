@@ -3,6 +3,8 @@
     width: 85%;
     border: 1px solid #fff;
     margin-top: 1em;
+    margin-left: auto;
+    margin-right: auto;
 }
 
 .depFltStrip {
