@@ -79,5 +79,21 @@
   display: grid;
   grid-template-columns: 1fr 1fr;
   margin-top: 2em;
+  height: 400px;
   text-align: center;
+  overflow: auto;
+}
+
+.flightColumn {
+  min-height: 5em;
+}
+
+
+/* For scrollbar in Chrome and Safari */
+::-webkit-scrollbar {
+  width: 5px;
+  height: 5px;
+}
+::-webkit-scrollbar-track-piece  {
+background-color: rgb(120, 120, 120);
 }

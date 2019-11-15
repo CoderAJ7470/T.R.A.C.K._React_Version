@@ -90,7 +90,6 @@ export default function Header() {
       manageArrays('refreshDepOrder');
     }
     else if(destination.droppableId === columnDepID && destination.index !== source.index) {
-      // console.log('got dep?')
       newDepArray = [...departuresArray];
 
       draggedItem = newDepArray.splice(source.index, 1)[0];
@@ -99,9 +98,7 @@ export default function Header() {
 
       manageArrays('refreshDepOrder');
     }
-    else if(destination.droppableId === columnArrID && destination.index !== source.index) {
-      // console.log('got arr?');
-      
+    else if(destination.droppableId === columnArrID && destination.index !== source.index) {      
       newArrArray = [...arrivalsArray];
 
       draggedItem = newArrArray.splice(source.index, 1)[0];
@@ -110,6 +107,10 @@ export default function Header() {
 
       manageArrays('refreshArrOrder');
     }
+  }
+
+  function validateInput() {
+    // validate all input fields
   }
 
   function addFlightStrip() {
@@ -226,7 +227,7 @@ export default function Header() {
         <div className={trackPanelStyles['flightStripTable']}>
           <Droppable droppableId={columnDepID}>
             {(provided) => (
-              <div className={trackPanelStyles['flightStrips']}
+              <div className={trackPanelStyles['flightColumn']}
                 ref={provided.innerRef}
                 {...provided.droppableProps}
               >
@@ -247,7 +248,7 @@ export default function Header() {
           </Droppable>
           <Droppable droppableId={columnArrID}>
             {(provided) => (
-              <div className={trackPanelStyles['flightStrips']}
+              <div className={trackPanelStyles['flightColumns']}
                 ref={provided.innerRef}
                 {...provided.droppableProps}
               >
