@@ -1,4 +1,4 @@
-import React, { useState } from 'react';
+import React, { useState, useEffect } from 'react';
 import { DragDropContext, Droppable } from 'react-beautiful-dnd';
 
 import trackPanelStyles from '../CSS/track_panel.module.css';
@@ -10,11 +10,18 @@ export default function Header() {
   const [isDeparture, setStatus] = useState(true);
   const [statusButtonText, setButtonText] = useState('Departure');
 
+  // keys for flight strip object
   let [id, setID] = useState(1);
   const [codeInput, setCode] = useState('');
   const [fltNoInput, setFltNo] = useState('');
   const [acftTypeInput, setAcftType] = useState('');
   const [cruiseAltInput, setCruiseAlt] = useState('');
+  const [status, updateStatus] = useState('');
+
+  useEffect(() => {
+    console.log('dep: ', departuresArray)
+    console.log('arr: ', arrivalsArray);
+  }, [departuresArray, arrivalsArray])
 
   // let codesArray = ['ABJ', 'ABL', 'GBL', 'HVN', 'RGL', 'STE', 'STR', 'THI'];
 
@@ -47,6 +54,7 @@ export default function Header() {
   }
 
   function onDragEnd(result) {
+    let draggedItem;
     const { destination, source } = result;
 
     if(!destination) {
@@ -56,26 +64,51 @@ export default function Header() {
     if(destination.droppableId === source.droppableId && destination.index === source.index) {
       return;
     }
-    else if(destination.droppableId === columnDepID && destination.index !== source.index) {
+
+    if(source.droppableId === columnDepID && destination.droppableId === columnArrID) {
+      newDepArray = [...departuresArray];
+      newArrArray = [...arrivalsArray];
+
+      draggedItem = newDepArray.splice(source.index, 1)[0];
+      draggedItem.status = 'Arrival';
+
+      newArrArray.splice(destination.index, 0, draggedItem);
+
+      manageArrays('refreshDepOrder');
+      manageArrays('refreshArrOrder');
+    }
+    else if(source.droppableId === columnArrID && destination.droppableId === columnDepID) {
+      newArrArray = [...arrivalsArray];
       newDepArray = [...departuresArray];
 
-      let draggedItem = newDepArray.splice(source.index, 1)[0];
+      draggedItem = newArrArray.splice(source.index, 1)[0];
+      draggedItem.status = 'Departure';
+
+      newDepArray.splice(destination.index, 0, draggedItem);
+
+      manageArrays('refreshArrOrder');
+      manageArrays('refreshDepOrder');
+    }
+    else if(destination.droppableId === columnDepID && destination.index !== source.index) {
+      // console.log('got dep?')
+      newDepArray = [...departuresArray];
+
+      draggedItem = newDepArray.splice(source.index, 1)[0];
 
       newDepArray.splice(destination.index, 0, draggedItem);
 
       manageArrays('refreshDepOrder');
     }
     else if(destination.droppableId === columnArrID && destination.index !== source.index) {
+      // console.log('got arr?');
+      
       newArrArray = [...arrivalsArray];
 
-      let draggedItem = newArrArray.splice(source.index, 1)[0];
+      draggedItem = newArrArray.splice(source.index, 1)[0];
 
       newArrArray.splice(destination.index, 0, draggedItem);
 
       manageArrays('refreshArrOrder');
-    }
-    else if(source.droppableId !== destination.droppableId && destination.droppableId === columnDepID) {
-
     }
   }
 
@@ -127,14 +160,12 @@ export default function Header() {
         ]);
         break;
       case 'refreshDepOrder':
-        console.log('new dep array: ', ...newDepArray);
         departuresArray = [];
-        departuresArray = [...newDepArray];
+        updateDepArray([...newDepArray]);
         break;
       case 'refreshArrOrder':
-        console.log('new arr array: ', ...newArrArray);
         arrivalsArray = [];
-        arrivalsArray = [...newArrArray];
+        updateArrArray([...newArrArray]);
         break;
       default:
         return;
@@ -159,7 +190,7 @@ export default function Header() {
 
       <div className={trackPanelStyles['flightStrip']}>
         <fieldset>
-          <legend>Enter the following information</legend>
+          <legend>Generate a flight strip</legend>
 
           <input type="text" value={codeInput} onChange={e => setCode(e.target.value)}
             className={trackPanelStyles['codeInput']} id='codeInput'
@@ -201,6 +232,7 @@ export default function Header() {
               >
                 {departuresArray.map((fltData, index) =>
                   <FlightStrip
+                    fltData={fltData}
                     index={index}
                     flightId={fltData.id}
                     key={fltData.id}
@@ -221,6 +253,7 @@ export default function Header() {
               >
                 {arrivalsArray.map((fltData, index) =>
                   <FlightStrip
+                    fltData={fltData}
                     index={index}
                     flightId={fltData.id}
                     key={fltData.id}

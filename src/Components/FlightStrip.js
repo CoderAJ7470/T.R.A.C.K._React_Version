@@ -17,8 +17,9 @@ export default class FlightStrip extends Component {
             {...provided.dragHandleProps}
             ref={provided.innerRef}
           >
+            {console.log(this.props.fltData)}
             <div>
-              {this.props.code} {this.props.number} {console.log(this.props.flightId)}
+              {this.props.code} {this.props.number} 
             </div>
             <div>
               {this.props.type} {this.props.altitude}
