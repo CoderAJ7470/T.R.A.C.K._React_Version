@@ -17,12 +17,11 @@ export default class FlightStrip extends Component {
             {...provided.dragHandleProps}
             ref={provided.innerRef}
           >
-            {console.log(this.props.fltData)}
-            <div>
+            <div className={flightStripStyles['topInfo']}>
               {this.props.code} {this.props.number} 
             </div>
             <div>
-              {this.props.type} {this.props.altitude}
+              {this.props.type} FL{this.props.altitude}
             </div>
           </div>
         )}

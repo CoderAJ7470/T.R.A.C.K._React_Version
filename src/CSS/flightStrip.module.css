@@ -14,3 +14,7 @@
 .arrFltStrip {
     background-color: rgb(10, 110, 240);
 }
+
+.topInfo {
+  border-bottom: 1px solid #fff;
+}

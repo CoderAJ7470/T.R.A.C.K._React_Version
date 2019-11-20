@@ -1,4 +1,4 @@
-import React, { useState, useEffect } from 'react';
+import React, { useState } from 'react';
 import { DragDropContext, Droppable } from 'react-beautiful-dnd';
 
 import trackPanelStyles from '../CSS/track_panel.module.css';
@@ -7,52 +7,89 @@ import FlightStrip from './FlightStrip';
 export default function Header() {
   let [departuresArray, updateDepArray] = useState([]);
   let [arrivalsArray, updateArrArray] = useState([]);
-  const [isDeparture, setStatus] = useState(true);
+  const [isDeparture, setStatusAsDep] = useState(true);
   const [statusButtonText, setButtonText] = useState('Departure');
 
-  // keys for flight strip object
   let [id, setID] = useState(1);
   const [codeInput, setCode] = useState('');
   const [fltNoInput, setFltNo] = useState('');
   const [acftTypeInput, setAcftType] = useState('');
   const [cruiseAltInput, setCruiseAlt] = useState('');
-  const [status, updateStatus] = useState('');
-
-  useEffect(() => {
-    console.log('dep: ', departuresArray)
-    console.log('arr: ', arrivalsArray);
-  }, [departuresArray, arrivalsArray])
-
-  // let codesArray = ['ABJ', 'ABL', 'GBL', 'HVN', 'RGL', 'STE', 'STR', 'THI'];
 
   const columnDepID = '1';
   const columnArrID = '2';
   let newDepArray = [];
   let newArrArray = [];
-
   let newID = '';
 
+  const [valid, isItValid] = useState(true);
+  const [codeValid, isCodeValid] = useState(true);
+  const [fltNoValid, isFltNoValid] = useState(true);
+  const [acftTypeValid, isAcftValid] = useState(true);
+  const [cruiseAltValid, isCruiseAltValid] = useState(true);
+
+  const codePattern = new RegExp('^[A-Za-z0-9]{2,3}$');
+  const flightNumberPattern = new RegExp('^[0-9A-Z]+$');
+  const cruiseAltPattern = new RegExp('^[0-9]{3}$');
+
   function toggleStatus() {
-    isDeparture ? setStatus(false) : setStatus(true);
+    isDeparture ? setStatusAsDep(false) : setStatusAsDep(true);
+  }
+  
+  function codeIsValid() {
+    if(!codePattern.test(codeInput)) {
+      isCodeValid(false);
+      return false;
+    }
+
+    isCodeValid(true);
+    return true;
+  }
+
+  function fltNoIsValid() {
+    if(!flightNumberPattern.test(fltNoInput)) {
+      isFltNoValid(false);
+      return false;
+    }
+
+    isFltNoValid(true);
+    return true;
+  }
+
+  function acftTypeIsValid() {
+    if(acftTypeInput === '') {
+      isAcftValid(false);
+      return false;
+    }
+
+    isAcftValid(true);
+    return true;
+  }
+
+  function cruiseAltIsValid() {
+    if(!cruiseAltPattern.test(cruiseAltInput)) {
+      isCruiseAltValid(false);
+      return false;
+    }
+
+    isCruiseAltValid(true);
+    return true;
   }
 
   function setText(text) {
-    let newText = text;
-
-    switch(newText) {
+    switch(text) {
       case 'Departure':
-        newText = 'Arrival';
-        setButtonText(newText);
+        setButtonText('Arrival');
         break;
       case 'Arrival':
-        newText = 'Departure';
-        setButtonText(newText);
+        setButtonText('Departure');
         break;
       default:
         break;
     }
   }
 
+  // Allows you to specify the behavior of the Draggables after drag-and-drop
   function onDragEnd(result) {
     let draggedItem;
     const { destination, source } = result;
@@ -109,21 +146,29 @@ export default function Header() {
     }
   }
 
-  function validateInput() {
-    // validate all input fields
-  }
-
   function addFlightStrip() {
-    createID();
+    let code = codeIsValid();
+    let fltNum = fltNoIsValid();
+    let type = acftTypeIsValid();
+    let cruiseAlt = cruiseAltIsValid();
 
-    if(statusButtonText === 'Departure') {
-      manageArrays('newDeparture');
+    if(code && fltNum && type && cruiseAlt) {
+      isItValid(true);
+
+      createID();
+
+      if(statusButtonText === 'Departure') {
+        manageArrays('newDeparture');
+      }
+      else {
+        manageArrays('newArrival');
+      }
+
+      clearInputs();
     }
     else {
-      manageArrays('newArrival');
+      isItValid(false);
     }
-
-    clearInputs();
     document.getElementById('codeInput').focus();
   }
 
@@ -140,9 +185,9 @@ export default function Header() {
         updateDepArray([...departuresArray,
           {
             id: newID,
-            code: codeInput,
+            code: codeInput.toUpperCase(),
             fltNum: fltNoInput,
-            type: acftTypeInput,
+            type: acftTypeInput.toUpperCase(),
             cruiseAlt: cruiseAltInput,
             status: statusButtonText
           }
@@ -152,9 +197,9 @@ export default function Header() {
         updateArrArray([...arrivalsArray,
           {
             id: newID,
-            code: codeInput,
+            code: codeInput.toUpperCase(),
             fltNum: fltNoInput,
-            type: acftTypeInput,
+            type: acftTypeInput.toUpperCase(),
             cruiseAlt: cruiseAltInput,
             status: statusButtonText
           }
@@ -180,34 +225,66 @@ export default function Header() {
     setCruiseAlt('');
   }
 
+  function clearFlightTable() {
+    updateDepArray([]);
+    updateArrArray([]);
+    setButtonText('Departure');
+  }
+
+  function resetAll() {
+    clearInputs();
+    clearFlightTable();
+    setStatusAsDep(true);
+    isItValid(true);
+    isCodeValid(true);
+    isFltNoValid(true);
+    isAcftValid(true);
+    isCruiseAltValid(true);
+  }
+
   return (
     <>
-      <h3>Terminal Region Airspace Control Kit (T.R.A.C.K.)</h3>
-      <section className={trackPanelStyles['controls']}>
-        <button className={trackPanelStyles['reset']}>Reset Flight Strip Info</button>
-        <button className={trackPanelStyles['reset']}>Reset Flight Strips</button>
-        <button className={trackPanelStyles['reset']}>Reset All</button>
-      </section>
+      <div className={trackPanelStyles['topPanel']}>
+        <div>
+          <h3>Terminal Region Airspace Control Kit (T.R.A.C.K.)</h3>
+          <section className={trackPanelStyles['controls']}>
+            <button className={trackPanelStyles['reset']} onClick={clearInputs}>
+              Reset Flight Strip Info
+            </button>
+            <button className={trackPanelStyles['reset']} onClick={clearFlightTable}>
+              Reset Flight Strips
+            </button>
+            <button className={trackPanelStyles['reset']} onClick={resetAll}>
+              Reset All
+            </button>
+          </section>
+        </div>
+
+        <div id='errors' className={!valid ? trackPanelStyles['showError'] : trackPanelStyles['noError']}>
+          Please correct the highlighted field/s
+        </div>
+      </div>
 
       <div className={trackPanelStyles['flightStrip']}>
         <fieldset>
           <legend>Generate a flight strip</legend>
 
+          <label>Code:</label>
           <input type="text" value={codeInput} onChange={e => setCode(e.target.value)}
-            className={trackPanelStyles['codeInput']} id='codeInput'
-            placeholder='Code...' />
+            className={codeValid ? trackPanelStyles['inputsNoErrors'] : trackPanelStyles['inputsWithErrors']}
+            id='codeInput'/>
 
+          <label>FN:</label>
           <input type="text" value={fltNoInput} onChange={e => setFltNo(e.target.value)}
-            className={`${trackPanelStyles['inputs']} ${trackPanelStyles['fltNoInput']}`}
-            placeholder='Flt No...' />
+            className={fltNoValid ? trackPanelStyles['inputsNoErrors'] : trackPanelStyles['inputsWithErrors']}/>
 
+          <label>Acft:</label>
           <input type="text" value={acftTypeInput} onChange={e => setAcftType(e.target.value)}
-            className={`${trackPanelStyles['inputs']} ${trackPanelStyles['acftCodeInput']}`}
-            placeholder='Aircraft type...' />
+            className={acftTypeValid ? trackPanelStyles['inputsNoErrors'] : trackPanelStyles['inputsWithErrors']}/>
 
-          <input type="text"  value={cruiseAltInput} onChange={e => setCruiseAlt(e.target.value)}
-            className={`${trackPanelStyles['inputs']}`}
-            placeholder='Cruise altitude...' />
+          <label>Alt:</label>
+          <input type="text" value={cruiseAltInput} onChange={e => setCruiseAlt(e.target.value)}
+            className={cruiseAltValid ? trackPanelStyles['inputsNoErrors'] : trackPanelStyles['inputsWithErrors']}/>
 
           <button
             className={isDeparture ?

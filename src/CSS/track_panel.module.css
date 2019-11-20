@@ -1,5 +1,16 @@
+.topPanel {
+  display: grid;
+  grid-template-columns: 80% 20%;
+}
+
+.topPanel h3 {
+  margin-top: 0;
+  margin-bottom: 0;
+}
+
 .controls {
   margin-top: 1.1em;
+  display: inline-block;
 }
 
 .controls button {
@@ -24,26 +35,23 @@
   font-size: 0.8em;
 }
 
-.inputs {
+label {
+  font-size: 0.9em;
+}
+
+.inputsNoErrors, .inputsWithErrors {
   padding-left: 3px;
-  margin-left: 0.8em;
+  margin-right: 0.5em;
   height: 24px;
-  border: 0;
+  width: 3em;
 }
 
-.codeInput {
-  padding-left: 3px;
-  width: 7em;
-  height: 24px;
-  border: 0;
+.inputsNoErrors {
+  border: 3px solid #222831;
 }
 
-.fltNoInput {
-  width: 6.5em;
-}
-
-.acftCodeInput {
-  width: 9em;
+.inputsWithErrors {
+  border: 3px solid #df3939;
 }
 
 .flightStripButtons {
@@ -54,7 +62,6 @@
 }
 
 .departure, .arrival {
-  background-color: rgb(10, 121, 10);
   width: 90px;
 }
 
@@ -73,6 +80,7 @@
 .goButton {
   background-color: rgb(5, 85, 5);
   width: 40px;
+  margin-left: 1.1em;
 }
 
 .flightStripTable {
@@ -88,6 +96,20 @@
   min-height: 5em;
 }
 
+.showError {
+  color: #df3939;
+  background-color: rgb(230, 230, 230);
+  visibility: visible;
+  padding-left: 0.5em;
+}
+
+.noError {
+  visibility: hidden;
+}
+
+.errorBorder {
+  border: 1px solid #df3939;
+}
 
 /* For scrollbar in Chrome and Safari */
 ::-webkit-scrollbar {
