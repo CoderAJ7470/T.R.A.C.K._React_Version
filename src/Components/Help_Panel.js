@@ -7,7 +7,9 @@ export default function About() {
     <>
       <h4 className={helpPanelStyles['']}>
         The following sections are a guide to each of the different features of the T.R.A.C.K.
-        Please take a look at each section to see how this app works.
+        Please take a look at each section to see how this app works. <br/><br/>
+        NOTE: This app is best viewed/used on a tablet (with landscape orientation) or larger sized screen.
+        It has not been optimized for smaller devices.
       </h4>
 
       <div className={helpPanelStyles['info']}>
@@ -50,7 +52,34 @@ export default function About() {
         </section>
 
         <section>
-          <h3>3. Errors</h3>
+          <h3>3. Moving flight strips</h3>
+          The app currently generates flight strips with either of two statuses: a departure or an arrival.
+          Departures are placed on the left side with a green background colour while arrivals are on the right in a
+          blue background color.
+          <img src={require('../Assets/columns.png')} alt=''/>
+
+          You can easily re-order the flight strips with a simple drag-and-drop within their respective column, as
+          shown above.
+          <img src={require('../Assets/moving1.png')} alt='dragging within a column'/>
+          <br/>
+
+          You can also move them to the opposite column (cross-column drag-and-drop). A cross-column drag-and-drop will result
+          in a departure becoming an arrival and vice-versa.
+          <img src={require('../Assets/moving2.png')} alt='dragging across columns'/>
+
+          <br/>
+          NOTE: Use caution while doing a drag-and-drop; dragging outside of either column will result in the flight strip
+          getting removed from the column (see section 4 below).
+        </section>
+
+        <section>
+          <h3>4. Removing flight strips</h3>
+          <img src={require('../Assets/deleting.png')} alt='removing a flight strip'/>
+          You can remove flight strips easily by dragging outside the column from which they are dragged.
+        </section>
+
+        <section>
+          <h3>5. Errors</h3>
           <img src={require('../Assets/fltStrips_error.png')} alt='error checks'/>
           <p>This app has very simple error checking, and is included more so as a help instead of a hindrance (hopefully).
           Referring to the image above, any erroneous inputs will be highlighted when the user clicks the Go! button.
@@ -59,13 +88,12 @@ export default function About() {
         </section>
 
         <section>
-          <h3>4. Quick resets</h3>
+          <h3>6. Quick resets</h3>
           <img src={require('../Assets/resets.png')} alt='reset buttons'/>
           <p>Referring to the image above (from left to right):</p>
             <ul>
               <li>
-                "Reset Flight Strip Info" will clear out only the
-                input fields
+                "Reset Flight Strip Info" will clear out only the input fields
               </li>
               <li>
                 "Reset Flight Strips" will delete all flight strips that are present in the flight table.

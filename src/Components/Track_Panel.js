@@ -95,6 +95,20 @@ export default function Header() {
     const { destination, source } = result;
 
     if(!destination) {
+      // want to delete the flight strip object from the array it was dragged from
+      if(source.droppableId === columnDepID) {
+        newDepArray = [...departuresArray];
+        draggedItem = newDepArray.splice(source.index, 1)[0];
+        
+        manageArrays('refreshDepOrder');
+      }
+      else {
+        newArrArray = [...arrivalsArray];
+        draggedItem = newArrArray.splice(source.index, 1)[0];
+
+        manageArrays('refreshArrOrder');
+      }
+
       return;
     }
 
@@ -229,6 +243,7 @@ export default function Header() {
     updateDepArray([]);
     updateArrArray([]);
     setButtonText('Departure');
+    setStatusAsDep(true);
   }
 
   function resetAll() {
@@ -325,7 +340,7 @@ export default function Header() {
           </Droppable>
           <Droppable droppableId={columnArrID}>
             {(provided) => (
-              <div className={trackPanelStyles['flightColumns']}
+              <div className={trackPanelStyles['flightColumn']}
                 ref={provided.innerRef}
                 {...provided.droppableProps}
               >

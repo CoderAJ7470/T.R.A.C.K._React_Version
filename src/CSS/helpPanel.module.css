@@ -1,15 +1,16 @@
 .info {
   font-size: 0.9em;
-  height: 500px;
-  width: auto;
+  height: 400px;
   overflow: auto;
   padding: 1em;
 }
 
 .info img {
-  padding-left: 1.5em;
   padding-right: 1.5em;
+  margin-bottom: 0.5em;
   width: 70%;
+  text-align: left;
+  display: block;
 }
 
 .inputInstructions li {
